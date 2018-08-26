@@ -84,6 +84,7 @@ function handleEvent(event) {
         console.log("lrange failed");
         return;
       }
+      console.log(res);
       const period = res[0];
       const registDate = res[1];
       const content = res[2];
