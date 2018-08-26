@@ -111,18 +111,7 @@ function handleEvent(event) {
     // const messageObj = Script.CHECK_TEMPLATE;
     // return replyMessageObject(event, messageObj);
 
-    return client.replyMessage(event.replyToken, {
-      type: "template",
-      altText: "位置情報を送ってください。",
-      template: {
-        type: "buttons",
-        title: "位置情報",
-        text: "位置情報を送ってください。",
-        actions: [
-          { label: "位置情報を送る", type: "uri", uri: "line://nv/location" }
-        ]
-      }
-    });
+    return client.replyMessage(event.replyToken, Script.CHECK_TEMPLATE);
   }
 
   // botに返答
