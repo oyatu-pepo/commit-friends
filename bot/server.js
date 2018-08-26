@@ -50,7 +50,7 @@ function replyMessage(event, message) {
 }
 
 // 目標設定
-app.get("/goal", (res, req) =>  {
+app.get("/goal", (req, res) => {
   console.log('req', req);
   console.log('res', res);
   console.log(req.query);
