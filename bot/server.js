@@ -79,23 +79,24 @@ function handleEvent(event) {
   if (event.message.text === "進捗を報告する") {
     const key = `goal-${userId}`;
 
-    redisClient.lrange(key, 0, -1, (err, res) => {
-      if (err) {
-        console.log("lrange failed");
-        return;
-      }
-      const period = res[0];
-      const registDate = res[1];
-      const content = res[2];
+    // redisClient.lrange(key, 0, -1, (err, res) => {
+    //   if (err) {
+    //     console.log("lrange failed");
+    //     return;
+    //   }
+    //   const period = res[0];
+    //   const registDate = res[1];
+    //   const content = res[2];
 
-      var diff = moment().diff(moment(registDate), "days");
+    //   var diff = moment().diff(moment(registDate), "days");
 
-      replyText = getReplyTextProgressReport(diff, period);
-      console.log(replyText);
-      return replyMessage(event, replyText);
-    });
+    //   replyText = getReplyTextProgressReport(diff, period);
+    //   console.log(replyText);
+    //   return replyMessage(event, replyText);
+    // });
 
-    return;
+    replyText = "きた" + userId;
+    return replyMessage(event, replyText);
   }
 
   // botに返答
