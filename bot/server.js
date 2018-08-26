@@ -51,6 +51,8 @@ function replyMessage(event, message) {
 
 // 目標設定
 app.get("/goal", (res, req) =>  {
+  console.log(req.query);
+
   const expire = req.query.expire;
   const content = req.query.content;
   const key = `goal-${req.query.userId}`;
