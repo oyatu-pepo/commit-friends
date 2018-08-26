@@ -51,21 +51,19 @@ function replyMessage(event, message) {
 
 // 目標設定
 app.get("/goal", async (req, res) => {
-  const expire = req.query.expire;
-  const content = req.query.content;
   const key = `goal-${req.query.userId}`;
 
-  await redisClient.lpush(key, content);
-  await redisClient.lpush(key, expire);
+  // 既に保存しているか？
+  if (await redisClient.keys(key)) {
+    console.log('already exists...');
+    res.sendStatus(400);
+  }
+
+  await redisClient.lpush(key, req.query.content);
+  // await redisClient.lpush(key, req.query.registDate);
+  await redisClient.lpush(key, req.query.expire);
+
   res.sendStatus(200);
-  /*
-  res.sendStatus(400);
-  redisClient.lpush(key, content, () => {
-    redisClient.lpush(key, expire, () => {
-      res.sendStatus(200);
-    });
-  });
-  */
 });
 
 app.listen(PORT);
