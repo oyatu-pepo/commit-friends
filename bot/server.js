@@ -22,20 +22,29 @@ app.post("/webhook", line.middleware(config), (req, res) => {
 const client = new line.Client(config);
 
 function handleEvent(event) {
-  if (event.type !== "message" || event.message.type !== "text") {
-    return Promise.resolve(null);
+  console.log("[Event type]: " + event.type);
+  let replyText = "hogehoge";
+
+  if (event.type == "unfollow") {
+    replyText = "またのご利用お待ちしています！";
   }
 
-  let replyText = "";
+  if (event.type == "follow") {
+    // 招待された時
+    replyText = "招待ありがとうございます！";
+  }
+
   if (event.message.text === "こんにちは") {
     replyText = "こんばんわの時間ですよ";
-  } else {
-    replyText = "hogehoge";
   }
 
+  return replyMessage(event, replyText);
+}
+
+function replyMessage(event, message) {
   return client.replyMessage(event.replyToken, {
     type: "text",
-    text: replyText
+    text: message
   });
 }
 
