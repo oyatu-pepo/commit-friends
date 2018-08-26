@@ -101,10 +101,8 @@ function handleEvent(event) {
       var diff = moment().diff(moment(registDate), "days");
       if (diff < period) {
         // 経過日数を伝える
-        return client.replyMessage(
-          event.replyToken,
-          `目標設定から${diff}日が経過しました。今日は頑張れましたか?` + ""
-        );
+        const message = `目標設定から${diff}日が経過しました。今日は頑張れましたか?`;
+        return replyMessage(event, message);
         // return (
         //   `目標設定から${diff}日が経過しました。今日は頑張れましたか?` + ""
         // );
