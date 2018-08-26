@@ -194,10 +194,60 @@ function getReplyTextProgressReport(diff, period) {
   if (diff < period) {
     // 経過日数を伝える
     return `目標設定から${diff}日が経過しました。今日は頑張れましたか?` + "";
-  } else if (diff == period) {
-    return "目標設定設定日になりました。目標は達成できましたか?" + "";
-  } else if (diff > period) {
-    return "目標設定設定日を過ぎています。目標は達成できましたか?" + "";
+  } else if (diff >= period) {
+    return client.replyMessage(event.replyToken, {
+      type: "flex",
+      altText: "hoge",
+      contents: {
+        type: "bubble",
+        hero: {
+          type: "image",
+          url:
+            "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png",
+          size: "full",
+          aspectRatio: "20:13",
+          aspectMode: "cover",
+          action: {
+            type: "uri",
+            uri: "http://linecorp.com/"
+          }
+        },
+        body: {
+          type: "box",
+          layout: "vertical",
+          spacing: "md",
+          contents: [
+            {
+              type: "text",
+              text: "目標は達成できましたか？",
+              weight: "bold",
+              size: "sm"
+            },
+            {
+              type: "button",
+              style: "primary",
+              action: {
+                type: "message",
+                label: "はい",
+                text: "達成おめでとうございます"
+              }
+            },
+            {
+              type: "button",
+              style: "secondary",
+              action: {
+                type: "message",
+                label: "いいえ",
+                text: "次なら大丈夫ですよ"
+              }
+            }
+          ]
+        }
+      }
+    });
+  }
+  // } else if (diff > period) {
+    // return "目標設定設定日を過ぎています。目標は達成できましたか?" + "";
   }
   return "処理に失敗しました";
 }
