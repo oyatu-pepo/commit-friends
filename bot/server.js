@@ -107,12 +107,12 @@ function handleEvent(event) {
     return;
   }
 
-  if (event.message.text === "") {
+  if (event.message.text === "はい") {
     // return replyFlex(event, "", Script.CHECK_TEMPLATE);
     return client.replyMessage(event.replyToken, {
       type: "flex",
       altText: "hoge",
-      contents: Script.CHECK_TEMPLATE
+      contents: Script.CHECK_FLEX_BUBBLE
     });
   }
 
