@@ -117,6 +117,8 @@ app.listen(PORT);
 console.log(`Server running at ${PORT}`);
 
 function getReplyTextProgressReport(diff, period) {
+  console.log(diff);
+  console.log(period);
   if (diff < period) {
     // 経過日数を伝える
     return `目標設定から${diff}日が経過しました。今日は頑張れましたか?` + "";
