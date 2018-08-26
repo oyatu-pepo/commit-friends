@@ -91,6 +91,7 @@ function handleEvent(event) {
       var diff = moment().diff(moment(registDate), "days");
 
       replyText = getReplyTextProgressReport(diff, period);
+      console.log(replyText);
       return replyMessage(event, replyText);
     });
 
