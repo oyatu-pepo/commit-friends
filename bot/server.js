@@ -20,6 +20,7 @@ app.post("/webhook", line.middleware(config), (req, res) => {
 });
 
 const client = new line.Client(config);
+const redisClient = require('redis').createClient(process.env.REDIS_URL);
 
 function handleEvent(event) {
   console.log("[Event type]: " + event.type);
@@ -47,6 +48,18 @@ function replyMessage(event, message) {
     text: message
   });
 }
+
+// 目標設定
+app.get("/goal", (res, req) =>  {
+  const expire = req.query.expire;
+  const content = req.query.content;
+  const key = `goal-${userId}`;
+
+  redisClient.lpush(key, contents);
+  redisClient.lpush(key, key);
+
+  res.sendStatus(200);
+});
 
 app.listen(PORT);
 console.log(`Server running at ${PORT}`);
