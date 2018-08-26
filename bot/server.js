@@ -107,6 +107,10 @@ function handleEvent(event) {
     return;
   }
 
+  if (event.message.text === "はい") {
+    replyText = Script.CHECK_TEMPLATE;
+  }
+
   // botに返答
   if (replyText === "") {
     // 返答文がなければ、スルー
