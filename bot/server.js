@@ -99,15 +99,32 @@ function handleEvent(event) {
       const content = res[2];
 
       var diff = moment().diff(moment(registDate), "days");
+      if (diff < period) {
+        // 経過日数を伝える
+        return (
+          `目標設定から${diff}日が経過しました。今日は頑張れましたか?` + ""
+        );
+      } else if (diff >= period) {
+        return client.replyMessage(event.replyToken, Script.CHECK_FLEX);
+      }
+      // } else if (diff > period) {
+      // return "目標設定設定日を過ぎています。目標は達成できましたか?" + "";
+      // return "処理に失敗しました";
 
-      replyText = getReplyTextProgressReport(diff, period);
-      console.log(replyText);
-      return replyMessage(event, replyText);
+      // replyText = getReplyTextProgressReport(diff, period);
+      // console.log(replyText);
+      // return replyMessage(event, replyText);
     });
     return;
   }
 
+  // debug
   if (event.message.text === "テスト") {
+    // return replyFlex(event, "", Script.CHECK_TEMPLATE);
+    return client.replyMessage(event.replyToken, Script.CHECK_FLEX);
+  }
+
+  if (event.message.text === "デモデータ") {
     // return replyFlex(event, "", Script.CHECK_TEMPLATE);
     return client.replyMessage(event.replyToken, Script.CHECK_FLEX);
   }
@@ -139,7 +156,7 @@ function replyFlex(event, message, template) {
 app.listen(PORT);
 console.log(`Server running at ${PORT}`);
 
-function getReplyTextProgressReport(diff, period) {
+function getReplyTextProgressReport(event, diff, period) {
   console.log(diff);
   console.log(period);
   if (diff < period) {
