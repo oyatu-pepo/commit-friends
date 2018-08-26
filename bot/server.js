@@ -108,8 +108,7 @@ function handleEvent(event) {
   }
 
   if (event.message.text === "はい") {
-    const messageObj = Script.CHECK_TEMPLATE;
-    return replyTemplate(event, "", messageObj);
+    return replyTemplate(event, "", Script.CHECK_TEMPLATE);
   }
 
   // botに返答
@@ -130,9 +129,9 @@ function replyMessage(event, message) {
 
 function replyTemplate(event, message, template) {
   return client.replyMessage(event.replyToken, {
-    type: "template",
+    type: "flex",
     altText: message,
-    template: template
+    contents: template
   });
 }
 
