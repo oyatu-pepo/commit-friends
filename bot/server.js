@@ -4,7 +4,7 @@ const express = require("express");
 const line = require("@line/bot-sdk");
 const PORT = process.env.PORT || 3000;
 var Script = require("./const.js");
-var moment = require("moment");
+var moment = require("moment-timezone");
 
 const config = {
   channelSecret: "ed1dd9415344ff396ba73dc0d0123e73",
@@ -31,22 +31,20 @@ app.get("/goal", (req, res) => {
   const content = req.query.content;
   const userId = req.query.userId;
 
-  const date = moment()
-    .add(period, "days")
+  const registDate = moment()
+    .tz("Asia/Tokyo")
     .format("MMDD");
   console.log(period);
   console.log(content);
   console.log(userId);
-  console.log(date);
+  console.log(registDate);
 
-  // return res.json({ status: "ok" });
   // db保存
   const key = `goal-${userId}`;
-  redisClient.lpush(key, content, () => {
-    redisClient.lpush(key, period, () => {
-      res.sendStatus(200);
-    });
-  });
+  await redisClient.lpush(key, content);
+  await redisClient.lpush(key, registDate);
+  await redisClient.lpush(key, period);
+  res.sendStatus(200);
 });
 
 const client = new line.Client(config);
