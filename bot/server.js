@@ -33,6 +33,14 @@ const client = new line.Client(config);
 
 function handleEvent(event) {
   console.log("[Event type]: " + event.type);
+  let groupId;
+  let userId = event.source.userId;
+  console.log("userId: " + userId);
+
+  if (event.source.groupId !== undefined) {
+    groupId = event.source.groupId;
+    console.log("groupId: " + groupId);
+  }
   let replyText = "";
 
   if (event.type == "unfollow") {
