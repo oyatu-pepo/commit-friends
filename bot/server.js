@@ -4,6 +4,7 @@ const express = require("express");
 const line = require("@line/bot-sdk");
 const PORT = process.env.PORT || 3000;
 var Script = require("./const.js");
+var moment = require("moment");
 
 const config = {
   channelSecret: "ed1dd9415344ff396ba73dc0d0123e73",
@@ -25,8 +26,20 @@ app.post("/webhook", line.middleware(config), (req, res) => {
 
 app.get("/goal", (req, res) => {
   console.log(req.query);
-  // console.log("==========");
-  return res.json("");
+  const period = req.query.period;
+  const content = req.query.content;
+  const userId = req.query.userId;
+
+  const date = moment()
+    .add(3, "days")
+    .format("MMDD");
+  console.log(period);
+  console.log(content);
+  console.log(userId);
+  console.log(date);
+  // db保存
+
+  return res.json({ status: "ok" });
 });
 
 const client = new line.Client(config);
