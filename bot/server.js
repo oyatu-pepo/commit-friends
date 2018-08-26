@@ -247,7 +247,6 @@ function getReplyTextProgressReport(diff, period) {
     });
   }
   // } else if (diff > period) {
-    // return "目標設定設定日を過ぎています。目標は達成できましたか?" + "";
-  }
+  // return "目標設定設定日を過ぎています。目標は達成できましたか?" + "";
   return "処理に失敗しました";
 }
