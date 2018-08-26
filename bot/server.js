@@ -13,6 +13,7 @@ const config = {
 };
 
 const app = express();
+const redisClient = require("redis").createClient(process.env.REDIS_URL);
 
 app.post("/webhook", line.middleware(config), (req, res) => {
   console.log(req.body.events);
@@ -31,15 +32,21 @@ app.get("/goal", (req, res) => {
   const userId = req.query.userId;
 
   const date = moment()
-    .add(3, "days")
+    .add(period, "days")
     .format("MMDD");
   console.log(period);
   console.log(content);
   console.log(userId);
   console.log(date);
-  // db保存
 
-  return res.json({ status: "ok" });
+  // return res.json({ status: "ok" });
+  // db保存
+  const key = `goal-${userId}`;
+  redisClient.lpush(key, content, () => {
+    redisClient.lpush(key, period, () => {
+      res.sendStatus(200);
+    });
+  });
 });
 
 const client = new line.Client(config);
