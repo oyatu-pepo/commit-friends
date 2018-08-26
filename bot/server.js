@@ -111,7 +111,7 @@ function handleEvent(event) {
     // return replyFlex(event, "", Script.CHECK_TEMPLATE);
     return client.replyMessage(event.replyToken, {
       type: "flex",
-      altText: "おすすめバーガー",
+      altText: "",
       contents: {
         type: "bubble",
         hero: {
