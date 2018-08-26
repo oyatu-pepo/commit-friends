@@ -50,20 +50,22 @@ function replyMessage(event, message) {
 }
 
 // 目標設定
-app.get("/goal", (req, res) => {
+app.get("/goal", async (req, res) => {
   const expire = req.query.expire;
   const content = req.query.content;
   const key = `goal-${req.query.userId}`;
 
-  console.log(key, content);
+  await redisClient.lpush(key, content);
+  await redisClient.lpush(key, expire);
+  res.sendStatus(200);
+  /*
+  res.sendStatus(400);
   redisClient.lpush(key, content, () => {
-    console.log('callback1');
-    console.log(key, expire);
     redisClient.lpush(key, expire, () => {
-      console.log('callback2');
       res.sendStatus(200);
     });
   });
+  */
 });
 
 app.listen(PORT);
