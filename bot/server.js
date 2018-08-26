@@ -33,7 +33,7 @@ app.get("/goal", async (req, res) => {
 
   const registDate = moment()
     .tz("Asia/Tokyo")
-    .format("MMDD");
+    .format("YYYYMMDD");
   console.log(period);
   console.log(content);
   console.log(userId);
@@ -75,9 +75,26 @@ function handleEvent(event) {
     replyText = Script.REGISTER_GOAL_OK;
   }
 
-  // 進捗確認
-  if (event.message.text === "進捗教えて") {
-    replyText = Script.PROGRESS_STATUS_RESULT_BAD;
+  // 進捗報告
+  if (event.message.text === "進捗を報告する") {
+    const key = `goal-${userId}`;
+
+    redisClient.lrange(key, 0, -1, (err, res) => {
+      if (err) {
+        console.log("lrange failed");
+        return;
+      }
+      const period = res[0];
+      const registDate = res[1];
+      const content = res[2];
+
+      var diff = moment().diff(moment(registDate), "days");
+
+      replyText = getReplyTextProgressReport(diff, period);
+      return replyMessage(event, replyText);
+    });
+
+    return;
   }
 
   // botに返答
@@ -98,3 +115,15 @@ function replyMessage(event, message) {
 
 app.listen(PORT);
 console.log(`Server running at ${PORT}`);
+
+function getReplyTextProgressReport(diff, period) {
+  if (diff < period) {
+    // 経過日数を伝える
+    return `目標設定から${diff}日が経過しました。今日は頑張れましたか?` + "";
+  } else if (diff == period) {
+    return "目標設定設定日になりました。目標は達成できましたか?" + "";
+  } else if (diff > period) {
+    return "目標設定設定日を過ぎています。目標は達成できましたか?" + "";
+  }
+  return "処理に失敗しました";
+}
