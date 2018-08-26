@@ -55,10 +55,11 @@ app.get("/goal", (req, res) => {
   const content = req.query.content;
   const key = `goal-${req.query.userId}`;
 
-  redisClient.lpush(key, content);
-  redisClient.lpush(key, key);
-
-  res.sendStatus(200);
+  redisClient.lpush(key, content, () => {
+    redisClient.lpush(key, expire, () => {
+      res.sendStatus(200);
+    });
+  });
 });
 
 app.listen(PORT);
