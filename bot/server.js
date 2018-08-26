@@ -108,7 +108,8 @@ function handleEvent(event) {
   }
 
   if (event.message.text === "はい") {
-    replyText = Script.CHECK_TEMPLATE;
+    const messageObj = Script.CHECK_TEMPLATE;
+    return replyMessage(event, messageObj);
   }
 
   // botに返答
@@ -125,6 +126,10 @@ function replyMessage(event, message) {
     type: "text",
     text: message
   });
+}
+
+function replyMessageObject(event, messageObj) {
+  return client.replyMessage(event.replyToken, messageObj);
 }
 
 app.listen(PORT);
