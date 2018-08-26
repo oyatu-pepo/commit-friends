@@ -25,7 +25,7 @@ app.post("/webhook", line.middleware(config), (req, res) => {
   );
 });
 
-app.get("/goal", (req, res) => {
+app.get("/goal", async (req, res) => {
   console.log(req.query);
   const period = req.query.period;
   const content = req.query.content;
