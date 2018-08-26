@@ -3,27 +3,37 @@
 const express = require("express");
 const line = require("@line/bot-sdk");
 const PORT = process.env.PORT || 3000;
+var Script = require("./const.js");
 
 const config = {
-  channelSecret: "b85afa07249f830b9de32aa6393493b4",
+  channelSecret: "ed1dd9415344ff396ba73dc0d0123e73",
   channelAccessToken:
-    "6U8cMeuT3Ek0hX8y/HFcibjqWdyByxrp0Plp1h1y+J0L9TMqtX2kDWdrwxi0JRnGl9GIOzBoC1rfzF9TXs8KMkOUobl4pkmMF1SPkJF4/4taBIbSN/oSj7vPE2O5WB53NgxU1+KuPGzaGDc18qBCkAdB04t89/1O/w1cDnyilFU="
+    "aOuRKU4/TJlEkNKgT79AKLrTwzkXGUVWhtjDUALEGwPUGNztcuoa/5AB8pAQNrcMn7ZeLtSQDYKGsDLV3TiD5+4bb/fNW61xPX599q5pUhFdoWBmro/fmVcyTYGoNSRqPiv9l08ilOjNrJ2xDsn8hAdB04t89/1O/w1cDnyilFU="
 };
 
 const app = express();
 
 app.post("/webhook", line.middleware(config), (req, res) => {
   console.log(req.body.events);
+  // console.log("==========");
+  // console.log(req);
+  // console.log("==========");
   Promise.all(req.body.events.map(handleEvent)).then(result =>
     res.json(result)
   );
+});
+
+app.get("/goal", (req, res) => {
+  console.log(req.query);
+  // console.log("==========");
+  return res.json("");
 });
 
 const client = new line.Client(config);
 
 function handleEvent(event) {
   console.log("[Event type]: " + event.type);
-  let replyText = "hogehoge";
+  let replyText = "";
 
   if (event.type == "unfollow") {
     replyText = "またのご利用お待ちしています！";
@@ -31,14 +41,26 @@ function handleEvent(event) {
 
   if (event.type == "follow") {
     // 招待された時
-    replyText = "招待ありがとうございます！";
+    replyText = "招待ありがとうございます！ コミットフレンズだよ。";
   }
 
-  if (event.message.text === "こんにちは") {
-    replyText = "こんばんわの時間ですよ";
+  // 目標設定
+  if (event.message.text === "目標を教えて") {
+    replyText = Script.REGISTER_GOAL_OK;
   }
 
-  return replyMessage(event, replyText);
+  // 進捗確認
+  if (event.message.text === "進捗教えて") {
+    replyText = Script.PROGRESS_STATUS_RESULT_BAD;
+  }
+
+  // botに返答
+  if (replyText === "") {
+    // 返答文がなければ、スルー
+    return Promise.resolve(null);
+  } else {
+    return replyMessage(event, replyText);
+  }
 }
 
 function replyMessage(event, message) {
