@@ -3,28 +3,63 @@
 const express = require("express");
 const line = require("@line/bot-sdk");
 const PORT = process.env.PORT || 3000;
+var Script = require("./const.js");
+var moment = require("moment-timezone");
 
 const config = {
-  channelSecret: "b85afa07249f830b9de32aa6393493b4",
+  channelSecret: "ed1dd9415344ff396ba73dc0d0123e73",
   channelAccessToken:
-    "6U8cMeuT3Ek0hX8y/HFcibjqWdyByxrp0Plp1h1y+J0L9TMqtX2kDWdrwxi0JRnGl9GIOzBoC1rfzF9TXs8KMkOUobl4pkmMF1SPkJF4/4taBIbSN/oSj7vPE2O5WB53NgxU1+KuPGzaGDc18qBCkAdB04t89/1O/w1cDnyilFU="
+    "aOuRKU4/TJlEkNKgT79AKLrTwzkXGUVWhtjDUALEGwPUGNztcuoa/5AB8pAQNrcMn7ZeLtSQDYKGsDLV3TiD5+4bb/fNW61xPX599q5pUhFdoWBmro/fmVcyTYGoNSRqPiv9l08ilOjNrJ2xDsn8hAdB04t89/1O/w1cDnyilFU="
 };
 
 const app = express();
+// const redisClient = require("redis").createClient(process.env.REDIS_URL);
 
 app.post("/webhook", line.middleware(config), (req, res) => {
   console.log(req.body.events);
+  // console.log("==========");
+  // console.log(req);
+  // console.log("==========");
   Promise.all(req.body.events.map(handleEvent)).then(result =>
     res.json(result)
   );
 });
 
+app.get("/goal", (req, res) => {
+  console.log(req.query);
+  const period = req.query.period;
+  const content = req.query.content;
+  const userId = req.query.userId;
+
+  const registDate = moment()
+    .tz("Asia/Tokyo")
+    .format("MMDD");
+  console.log(period);
+  console.log(content);
+  console.log(userId);
+  console.log(registDate);
+
+  // db保存
+  const key = `goal-${userId}`;
+  // await redisClient.lpush(key, content);
+  // await redisClient.lpush(key, registDate);
+  // await redisClient.lpush(key, period);
+  res.sendStatus(200);
+});
+
 const client = new line.Client(config);
-const redisClient = require('redis').createClient(process.env.REDIS_URL);
 
 function handleEvent(event) {
   console.log("[Event type]: " + event.type);
-  let replyText = "hogehoge";
+  let groupId;
+  let userId = event.source.userId;
+  console.log("userId: " + userId);
+
+  if (event.source.groupId !== undefined) {
+    groupId = event.source.groupId;
+    console.log("groupId: " + groupId);
+  }
+  let replyText = "";
 
   if (event.type == "unfollow") {
     replyText = "またのご利用お待ちしています！";
@@ -32,14 +67,26 @@ function handleEvent(event) {
 
   if (event.type == "follow") {
     // 招待された時
-    replyText = "招待ありがとうございます！";
+    replyText = "招待ありがとうございます！ コミットフレンズだよ。";
   }
 
-  if (event.message.text === "こんにちは") {
-    replyText = "こんばんわの時間ですよ";
+  // 目標設定
+  if (event.message.text === "目標を教えて") {
+    replyText = Script.REGISTER_GOAL_OK;
   }
 
-  return replyMessage(event, replyText);
+  // 進捗確認
+  if (event.message.text === "進捗教えて") {
+    replyText = Script.PROGRESS_STATUS_RESULT_BAD;
+  }
+
+  // botに返答
+  if (replyText === "") {
+    // 返答文がなければ、スルー
+    return Promise.resolve(null);
+  } else {
+    return replyMessage(event, replyText);
+  }
 }
 
 function replyMessage(event, message) {
@@ -48,17 +95,6 @@ function replyMessage(event, message) {
     text: message
   });
 }
-
-// 目標設定
-app.get("/goal", async (req, res) => {
-  const key = `goal-${req.query.userId}`;
-
-  await redisClient.lpush(key, req.query.content);
-  await redisClient.lpush(key, req.query.registDate);
-  await redisClient.lpush(key, req.query.expire);
-
-  res.sendStatus(200);
-});
 
 app.listen(PORT);
 console.log(`Server running at ${PORT}`);
