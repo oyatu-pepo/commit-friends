@@ -15,6 +15,8 @@ const config = {
 const app = express();
 const redisClient = require("redis").createClient(process.env.REDIS_URL);
 
+app.use(express.static("public"));
+
 app.post("/webhook", line.middleware(config), (req, res) => {
   console.log(req.body.events);
   // console.log("==========");
