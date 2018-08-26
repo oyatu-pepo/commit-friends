@@ -108,10 +108,8 @@ function handleEvent(event) {
   }
 
   if (event.message.text === "はい") {
-    // const messageObj = Script.CHECK_TEMPLATE;
-    // return replyMessageObject(event, messageObj);
-
-    return client.replyMessage(event.replyToken, Script.CHECK_TEMPLATE);
+    const messageObj = Script.CHECK_TEMPLATE;
+    return replyTemplate(event, "", messageObj);
   }
 
   // botに返答
@@ -130,8 +128,12 @@ function replyMessage(event, message) {
   });
 }
 
-function replyMessageObject(event, messageObj) {
-  return client.replyMessage(event.replyToken, messageObj);
+function replyTemplate(event, message, template) {
+  return client.replyMessage(event.replyToken, {
+    type: "template",
+    altText: message,
+    template: template
+  });
 }
 
 app.listen(PORT);
