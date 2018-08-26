@@ -55,8 +55,12 @@ app.get("/goal", (req, res) => {
   const content = req.query.content;
   const key = `goal-${req.query.userId}`;
 
+  console.log(key, content);
   redisClient.lpush(key, content, () => {
+    console.log('callback1');
+    console.log(key, expire);
     redisClient.lpush(key, expire, () => {
+      console.log('callback2');
       res.sendStatus(200);
     });
   });
