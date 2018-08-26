@@ -78,6 +78,7 @@ function handleEvent(event) {
   // 進捗報告
   if (event.message.text === "進捗を報告する") {
     const key = `goal-${userId}`;
+    console.log(key);
 
     redisClient.lrange(key, 0, -1, (err, res) => {
       if (err) {
