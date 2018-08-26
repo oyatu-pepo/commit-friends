@@ -13,7 +13,7 @@ const config = {
 };
 
 const app = express();
-const redisClient = require("redis").createClient(process.env.REDIS_URL);
+// const redisClient = require("redis").createClient(process.env.REDIS_URL);
 
 app.use(express.static("public"));
 
@@ -43,9 +43,9 @@ app.get("/goal", async (req, res) => {
 
   // db保存
   const key = `goal-${userId}`;
-  await redisClient.lpush(key, content);
-  await redisClient.lpush(key, registDate);
-  await redisClient.lpush(key, period);
+  // await redisClient.lpush(key, content);
+  // await redisClient.lpush(key, registDate);
+  // await redisClient.lpush(key, period);
   res.sendStatus(200);
 });
 
@@ -82,22 +82,22 @@ function handleEvent(event) {
     const key = `goal-${userId}`;
     console.log(key);
 
-    redisClient.lrange(key, 0, -1, (err, res) => {
-      if (err) {
-        console.log("lrange failed");
-        return;
-      }
-      console.log(res);
-      const period = res[0];
-      const registDate = res[1];
-      const content = res[2];
+    // redisClient.lrange(key, 0, -1, (err, res) => {
+    //   if (err) {
+    //     console.log("lrange failed");
+    //     return;
+    //   }
+    //   console.log(res);
+    //   const period = res[0];
+    //   const registDate = res[1];
+    //   const content = res[2];
 
-      var diff = moment().diff(moment(registDate), "days");
+    //   var diff = moment().diff(moment(registDate), "days");
 
-      replyText = getReplyTextProgressReport(diff, period);
-      console.log(replyText);
-      return replyMessage(event, replyText);
-    });
+    //   replyText = getReplyTextProgressReport(diff, period);
+    //   console.log(replyText);
+    //   return replyMessage(event, replyText);
+    // });
     return;
   }
 
