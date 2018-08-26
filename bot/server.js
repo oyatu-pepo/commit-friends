@@ -74,7 +74,7 @@ function handleEvent(event) {
 
   // liff起動
   if (event.message.text === "目標を設定する") {
-    const LIFF_URL = "line://app/1603177377-NdALq3D";
+    const LIFF_URL = "line://app/1603177377-NdALq3DD";
     replyText = "次の登録画面から目標を設定しましょう！！\n" + LIFF_URL;
   }
 
