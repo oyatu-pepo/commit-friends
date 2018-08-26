@@ -109,7 +109,7 @@ function handleEvent(event) {
 
   if (event.message.text === "はい") {
     const messageObj = Script.CHECK_TEMPLATE;
-    return replyMessage(event, messageObj);
+    return replyMessageObject(event, messageObj);
   }
 
   // botに返答
