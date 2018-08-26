@@ -53,7 +53,7 @@ function replyMessage(event, message) {
 app.get("/goal", (res, req) =>  {
   const expire = req.query.expire;
   const content = req.query.content;
-  const key = `goal-${userId}`;
+  const key = `goal-${req.query.userId}`;
 
   redisClient.lpush(key, contents);
   redisClient.lpush(key, key);
