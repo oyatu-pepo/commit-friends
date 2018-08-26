@@ -109,11 +109,7 @@ function handleEvent(event) {
 
   if (event.message.text === "はい") {
     // return replyFlex(event, "", Script.CHECK_TEMPLATE);
-    return client.replyMessage(event.replyToken, {
-      type: "flex",
-      altText: "hoge",
-      contents: Script.CHECK_FLEX
-    });
+    return client.replyMessage(event.replyToken, Script.CHECK_FLEX);
   }
 
   // botに返答
