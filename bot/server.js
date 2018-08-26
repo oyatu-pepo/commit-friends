@@ -53,10 +53,13 @@ function replyMessage(event, message) {
 app.get("/goal", async (req, res) => {
   const key = `goal-${req.query.userId}`;
 
+  const getKeyResult = await redisClient.keys(key);
+  console.log(getKeyResult);
   // 既に保存しているか？
-  if (await redisClient.keys(key)) {
+  if (getKeyResult) {
     console.log('already exists...');
     res.sendStatus(400);
+    return;
   }
 
   await redisClient.lpush(key, req.query.content);
